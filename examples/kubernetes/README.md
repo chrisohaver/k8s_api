@@ -31,11 +31,6 @@ all the zones the plugin should be authoritative for.
 
 ```
 kubernetes [ZONES...] {
-    endpoint URL
-    tls CERT KEY CACERT
-    kubeconfig KUBECONFIG CONTEXT
-    namespaces NAMESPACE...
-    labels EXPRESSION
     pods POD-MODE
     endpoint_pod_names
     ttl TTL
@@ -46,23 +41,6 @@ kubernetes [ZONES...] {
 }
 ```
 
-* `endpoint` specifies the **URL** for a remote k8s API endpoint.
-   If omitted, it will connect to k8s in-cluster using the cluster service account.
-* `tls` **CERT** **KEY** **CACERT** are the TLS cert, key and the CA cert file names for remote k8s connection.
-   This option is ignored if connecting in-cluster (i.e. endpoint is not specified).
-* `kubeconfig` **KUBECONFIG** **CONTEXT** authenticates the connection to a remote k8s cluster using a kubeconfig file. It supports TLS, username and password, or token-based authentication. This option is ignored if connecting in-cluster (i.e., the endpoint is not specified).
-* `namespaces` **NAMESPACE [NAMESPACE...]** only exposes the k8s namespaces listed.
-   If this option is omitted all namespaces are exposed
-* `namespace_labels` **EXPRESSION** only expose the records for Kubernetes namespaces that match this label selector.
-   The label selector syntax is described in the
-   [Kubernetes User Guide - Labels](https://kubernetes.io/docs/user-guide/labels/). An example that
-   only exposes namespaces labeled as "istio-injection=enabled", would use:
-   `labels istio-injection=enabled`.
-* `labels` **EXPRESSION** only exposes the records for Kubernetes objects that match this label selector.
-   The label selector syntax is described in the
-   [Kubernetes User Guide - Labels](https://kubernetes.io/docs/user-guide/labels/). An example that
-   only exposes objects labeled as "application=nginx" in the "staging" or "qa" environments, would
-   use: `labels environment in (staging, qa),application=nginx`.
 * `pods` **POD-MODE** sets the mode for handling IP-based pod A records, e.g.
    `1-2-3-4.ns.pod.cluster.local. in A 1.2.3.4`.
    This option is provided to facilitate use of SSL certs when connecting directly to pods. Valid
