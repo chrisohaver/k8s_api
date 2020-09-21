@@ -48,7 +48,9 @@ k8s_api {
 
 *k8s_api* is an *external* plugin, which means it is not included in CoreDNS releases.  To use *k8s_api*, you'll need to build a CoreDNS image with *k8s_api*. In a nutshell you'll need to:
 * Clone https://github.com/coredns/coredns into `$GOPATH/src/github.com/coredns`
-* Add this plugin to [plugin.cfg](https://github.com/coredns/coredns/blob/master/plugin.cfg) per instructions therein.
+* Add this plugin to [plugin.cfg](https://github.com/coredns/coredns/blob/master/plugin.cfg) 
+  per instructions therein. This plugin must be ordered *after* any plugins that use
+  it (i.e. plugins that implement APIWatcher).
 * `make -f Makefile.release DOCKER=your-docker-repo release`
 * `make -f Makefile.release DOCKER=your-docker-repo docker`
 * `make -f Makefile.release DOCKER=your-docker-repo docker-push`
