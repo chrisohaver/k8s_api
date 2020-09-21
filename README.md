@@ -12,16 +12,16 @@
 type APIWatcher interface {
   # Informers should return list of functions that return an Kubernetes Object Informer, each mapped by watch name. 
   # k8s_api will start each Informer on the API connection.
-	Informers() map[string]InformerFunc 
+  Informers() map[string]InformerFunc 
   
   # SetIndexer should set the index passed to a local pointer to be used by the implementor.  k8s_api calls this function for *all* Informers 
   # added by the implementor and other implementors via the Informers() function. This enables multiple plugins/implementors to share the same
   # stores/indexes created by a single Informer.
-	SetIndexer(string, cache.KeyListerGetter) error
+  SetIndexer(string, cache.KeyListerGetter) error
   
   # SetHasSynced should set the HasSyncedFunc passed to a local function to be used by the implementor.  Implement this if the plugin needs to
   # know if the API informers have fully synced (i.e. completed initial list action before beginning the watch). 
-	SetHasSynced(HasSyncedFunc) # If required, should set a local function to be used to check sync status of the watches.
+  SetHasSynced(HasSyncedFunc) # If required, should set a local function to be used to check sync status of the watches.
 }
 ```
 
