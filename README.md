@@ -50,3 +50,8 @@ k8s_api {
 ## Examples
 
 To Do
+
+## TO-DOs
+
+Namespace filtering.
+Object/namespace *label* filtering.
