@@ -11,12 +11,13 @@
 ```
 type APIWatcher interface {
   # Informers should return list of functions that return an Kubernetes Object Informer, each mapped by watch name. 
-  # k8s_api will start each Informer on the API connection.
+  # k8s_api will start each Informer on the API connection. If multipl plugins return an Informer func with the same name,
+  # the last plugin (per plugin execution order), will override the others.
   Informers() map[string]InformerFunc 
   
   # SetIndexer should set the index passed to a local pointer to be used by the implementor.  k8s_api calls this function for *all* Informers 
   # added by the implementor and other implementors via the Informers() function. This enables multiple plugins/implementors to share the same
-  # stores/indexes created by a single Informer.
+  # store/index managed by a single Informer.
   SetIndexer(string, cache.KeyListerGetter) error
   
   # SetHasSynced should set the HasSyncedFunc passed to a local function to be used by the implementor.  Implement this if the plugin needs to
@@ -53,5 +54,5 @@ To Do
 
 ## TO-DOs
 
-Namespace filtering.
-Object/namespace *label* filtering.
+* Namespace filtering.
+* Object/namespace *label* filtering.
