@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	k8sapi "github.com/coredns/coredns/plugin/k8s_api"
+	k8sapi "github.com/chrisohaver/k8s_api/k8s_api"
 	"github.com/coredns/coredns/plugin/kubernetes/object"
 
 	api "k8s.io/api/core/v1"
