@@ -4,7 +4,7 @@ import (
 	"context"
 
 	k8sapi "github.com/chrisohaver/k8s_api/k8s_api"
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	api "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
