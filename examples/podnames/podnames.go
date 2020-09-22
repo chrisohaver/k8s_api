@@ -5,7 +5,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-const pluginName = "k8s_api"
+const pluginName = "podnames"
 
 type PodNames struct {
 	Next       plugin.Handler

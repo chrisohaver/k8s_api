@@ -42,6 +42,7 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 			m.Answer = append(m.Answer, &dns.PTR{
 				Hdr: dns.RR_Header{
 					Name:   qname,
+					Class: dns.ClassINET,
 					Rrtype: dns.TypePTR,
 					Ttl:    p.ttl,
 				},
@@ -56,9 +57,12 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	}
 
 	// strip zone off to get name/namespace
-	sub := qname[0:strings.Index(qname, zone)]
-	key := strings.Replace(sub,".","/", 1)
-	item, exists, err := p.podIndexer.GetByKey(key)
+	sub := qname[0 : strings.Index(qname, zone)-1]
+	segs := strings.Split(sub, ".")
+	if len(segs) < 2 {
+		return dns.RcodeNameError, nil
+	}
+	item, exists, err := p.podIndexer.GetByKey(segs[1] + "/" + segs[0])
 	if err != nil {
 		return dns.RcodeServerFailure, err
 	}
@@ -72,12 +76,14 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	ip := net.ParseIP(pod.PodIP)
 
 	// construct the reply
-	m := &dns.Msg{}
+	m := new(dns.Msg)
 	m.SetReply(r)
+	m.Authoritative = true
 	if ip.To4() != nil && state.QType() == dns.TypeA {
 		m.Answer = append(m.Answer, &dns.A{
 			Hdr: dns.RR_Header{
 				Name:   qname,
+				Class: dns.ClassINET,
 				Rrtype: dns.TypeA,
 				Ttl:    p.ttl,
 			},
@@ -87,6 +93,7 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 		m.Answer = append(m.Answer, &dns.AAAA{
 			Hdr: dns.RR_Header{
 				Name:   qname,
+				Class: dns.ClassINET,
 				Rrtype: dns.TypeAAAA,
 				Ttl:    p.ttl,
 			},
