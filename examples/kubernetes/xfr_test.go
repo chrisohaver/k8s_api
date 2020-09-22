@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	"github.com/coredns/coredns/plugin/pkg/dnstest"
 	"github.com/coredns/coredns/plugin/test"
 

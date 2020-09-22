@@ -4,7 +4,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	"github.com/miekg/dns"
 	api "k8s.io/api/core/v1"
 )

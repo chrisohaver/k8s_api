@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/coredns/coredns/plugin/kubernetes/object"
+	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	"github.com/coredns/coredns/plugin/test"
 	"github.com/coredns/coredns/request"
 	"k8s.io/client-go/tools/cache"
