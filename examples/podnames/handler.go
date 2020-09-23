@@ -16,7 +16,7 @@ import (
 // ServeDNS implements the plugin.Handler interface.
 func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (int, error) {
 	state := request.Request{W: w, Req: r}
-	if state.QType() != dns.TypeA && state.QType() != dns.TypeAAAA {
+	if state.QType() != dns.TypeA && state.QType() != dns.TypeAAAA && state.QType() != dns.TypePTR {
 		return plugin.NextOrFailure(p.Name(), p.Next, ctx, w, r)
 	}
 	qname := state.QName()
@@ -35,7 +35,7 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 		m := &dns.Msg{}
 		m.SetReply(r)
 		for _, o := range objs {
-			pod, ok := o.(object.Pod)
+			pod, ok := o.(*object.Pod)
 			if !ok {
 				continue
 			}

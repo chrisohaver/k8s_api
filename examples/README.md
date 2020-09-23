@@ -6,7 +6,7 @@
 
 * examples/podnames - *Work in Progress* - enable pod lookup by 
   podname/namespace - e.g. `mypod.mynamespace.pod.cluster.local`.  It uses
-  the "pod" informer created by the example/kubernetes plugin above. e.g.
+  the "pod" informer created by the examples/kubernetes plugin above. e.g.
   
   plugin.cfg:
   ```
