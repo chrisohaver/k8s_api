@@ -26,11 +26,6 @@ podnames [ZONES...] {
 * `ttl` allows you to set a custom TTL for responses. The default is 5 seconds.  The minimum TTL allowed is
   0 seconds, and the maximum is capped at 3600 seconds. Setting TTL to 0 will prevent records from being cached.
 
-## Ready
-
-This plugin reports readiness to the ready plugin. This will happen after the
-Kubernetes API connection is synced.
-
 ## Examples
 
 Create records for Pods by pod name in the domain `pod.cluster.local.`
