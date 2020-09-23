@@ -55,7 +55,7 @@ func parse(c *caddy.Controller) (*PodNames, error) {
 }
 
 func parseStanza(c *caddy.Controller) (*PodNames, error) {
-	p := &PodNames{}
+	p := &PodNames{ttl: 5}
 
 	zones := c.RemainingArgs()
 	if len(zones) != 0 {
