@@ -16,6 +16,8 @@ to deploy CoreDNS in Kubernetes](https://github.com/coredns/deployment/tree/mast
 [stubDomains and upstreamNameservers](https://kubernetes.io/blog/2017/04/configuring-private-dns-zones-upstream-nameservers-kubernetes/)
 are implemented via the *forward* plugin. See the examples below.
 
+This plugin requires the *k8s_api* plugin.
+
 This plugin can only be used once per Server Block.
 
 ## Syntax
@@ -99,21 +101,17 @@ requests.
     kubernetes {
         pods verified
     }
+    k8s_api
 }
 ~~~
 
-Or you can selectively expose some namespaces:
+
+You may connect to Kubernetes with CoreDNS running outside the cluster:
 
 ~~~ txt
-kubernetes cluster.local {
-    namespaces test staging
-}
-~~~
+kubernetes cluster.local
 
-Connect to Kubernetes with CoreDNS running outside the cluster:
-
-~~~ txt
-kubernetes cluster.local {
+k8s_api {
     endpoint https://k8s-endpoint:8443
     tls cert key cacert
 }
@@ -128,7 +126,9 @@ or `example.local`.
 ~~~ txt
 cluster.local:53 {
     kubernetes cluster.local
+    k8s_api
 }
+
 example.local {
     forward . 10.100.0.10:53
 }
