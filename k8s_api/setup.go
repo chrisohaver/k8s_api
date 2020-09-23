@@ -59,6 +59,10 @@ func (k *KubeAPI) getAPIWatchers(c *caddy.Controller) error {
 		if w, ok := pl.(APIWatcher); ok {
 			ifn := w.Informers()
 			for n, f := range ifn {
+				// skip if an informer with same name already exists
+				if _, ok := informerFuncs[n]; ok {
+					continue
+				}
 				informerFuncs[n] = f
 			}
 		}
