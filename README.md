@@ -6,7 +6,8 @@
 
 ## Description
 
-*k8s_api* enables any plugin that implementing the `k8sapi.APIWatcher` interface, to register Kubernetes API informers, and share access to object stores.
+*k8s_api* enables any plugin that implements the `k8sapi.APIWatcher` interface
+to register Kubernetes API informers and share access to object stores.
 
 ```
 type APIWatcher interface {
@@ -60,23 +61,3 @@ k8s_api {
 ## Examples
 
 Example plugins that implement `k8sapi.APIWatcher` can be found in the `examples` directory. 
-
-## TO-DOs
-
-* Namespace filtering:
-
-  * `namespaces` **NAMESPACE [NAMESPACE...]** only exposes the k8s namespaces listed.
-   If this option is omitted all namespaces are exposed
-   
-* Object/namespace *label* filtering:
-
-  * `namespace_labels` **EXPRESSION** only expose the records for Kubernetes namespaces that match this label selector.
-   The label selector syntax is described in the
-   [Kubernetes User Guide - Labels](https://kubernetes.io/docs/user-guide/labels/). An example that
-   only exposes namespaces labeled as "istio-injection=enabled", would use:
-   `labels istio-injection=enabled`.
-  * `labels` **EXPRESSION** only exposes the records for Kubernetes objects that match this label selector.
-   The label selector syntax is described in the
-   [Kubernetes User Guide - Labels](https://kubernetes.io/docs/user-guide/labels/). An example that
-   only exposes objects labeled as "application=nginx" in the "staging" or "qa" environments, would
-   use: `labels environment in (staging, qa),application=nginx`.

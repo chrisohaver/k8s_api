@@ -20,7 +20,6 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"       // pull this in here, because we want it excluded if plugin.cfg doesn't have k8s
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"      // pull this in here, because we want it excluded if plugin.cfg doesn't have k8s
 	_ "k8s.io/client-go/plugin/pkg/client/auth/openstack" // pull this in here, because we want it excluded if plugin.cfg doesn't have k8s
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog"
 )
 
@@ -150,25 +149,6 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 				continue
 			}
 			return nil, c.ArgErr()
-		case "endpoint": // endpoint is ignored
-			args := c.RemainingArgs()
-			if len(args) > 0 {
-				// Multiple endpoints are deprecated but still could be specified,
-				// only the first one be used, though
-				k8s.APIServerList = args
-				if len(args) > 1 {
-					log.Warningf("Multiple endpoints have been deprecated, only the first specified endpoint '%s' is used", args[0])
-				}
-				continue
-			}
-			return nil, c.ArgErr()
-		case "tls": // cert key cacertfile // tls is ignored
-			args := c.RemainingArgs()
-			if len(args) == 3 {
-				k8s.APIClientCert, k8s.APIClientKey, k8s.APICertAuth = args[0], args[1], args[2]
-				continue
-			}
-			return nil, c.ArgErr()
 		case "labels":
 			args := c.RemainingArgs()
 			if len(args) > 0 {
@@ -177,7 +157,11 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 				if err != nil {
 					return nil, fmt.Errorf("unable to parse label selector value: '%v': %v", labelSelectorString, err)
 				}
-				k8s.opts.labelSelector = ls
+				selector, err := meta.LabelSelectorAsSelector(ls)
+				if err != nil {
+					return nil, fmt.Errorf("unable to create selector for labels: '%s': %q", ls, err)
+				}
+				k8s.opts.selector = selector
 				continue
 			}
 			return nil, c.ArgErr()
@@ -189,7 +173,11 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 				if err != nil {
 					return nil, fmt.Errorf("unable to parse namespace_label selector value: '%v': %v", namespaceLabelSelectorString, err)
 				}
-				k8s.opts.namespaceLabelSelector = nls
+				selector, err := meta.LabelSelectorAsSelector(nls)
+				if err != nil {
+					return nil, fmt.Errorf("unable to create selector for labels: '%s': %q", nls, err)
+				}
+				k8s.opts.namespaceSelector = selector
 				continue
 			}
 			return nil, c.ArgErr()
@@ -233,23 +221,12 @@ func ParseStanza(c *caddy.Controller) (*Kubernetes, error) {
 					return nil, fmt.Errorf("unable to parse ignore value: '%v'", ignore)
 				}
 			}
-		case "kubeconfig": // kubeconfig is ignored
-			args := c.RemainingArgs()
-			if len(args) == 2 {
-				config := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-					&clientcmd.ClientConfigLoadingRules{ExplicitPath: args[0]},
-					&clientcmd.ConfigOverrides{CurrentContext: args[1]},
-				)
-				k8s.ClientConfig = config
-				continue
-			}
-			return nil, c.ArgErr()
 		default:
 			return nil, c.Errf("unknown property '%s'", c.Val())
 		}
 	}
 
-	if len(k8s.Namespaces) != 0 && k8s.opts.namespaceLabelSelector != nil {
+	if len(k8s.Namespaces) != 0 && k8s.opts.namespaceSelector != nil {
 		return nil, c.Errf("namespaces and namespace_labels cannot both be set")
 	}
 

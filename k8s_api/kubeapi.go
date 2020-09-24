@@ -10,6 +10,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/apimachinery/pkg/labels"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
 
@@ -23,6 +24,10 @@ type KubeAPI struct {
 	APIClientKey  string
 	ClientConfig  clientcmd.ClientConfig
 	APIConn       apiController
+
+	namespaces map[string]struct{}
+	selector labels.Selector
+	nsSelector labels.Selector
 }
 
 // New returns a initialized Kubernetes. It default interfaceAddrFunc to return 127.0.0.1. All other

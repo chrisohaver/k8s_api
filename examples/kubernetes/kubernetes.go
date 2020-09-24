@@ -7,9 +7,9 @@ import (
 	"net"
 	"strings"
 
+	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/plugin/etcd/msg"
-	"github.com/chrisohaver/k8s_api/examples/kubernetes/object"
 	"github.com/coredns/coredns/plugin/pkg/dnsutil"
 	"github.com/coredns/coredns/plugin/pkg/fall"
 	"github.com/coredns/coredns/plugin/pkg/upstream"
@@ -17,7 +17,6 @@ import (
 
 	"github.com/miekg/dns"
 	api "k8s.io/api/core/v1"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 // Kubernetes implements a plugin that connects to a Kubernetes cluster.
@@ -25,11 +24,6 @@ type Kubernetes struct {
 	Next             plugin.Handler
 	Zones            []string
 	Upstream         *upstream.Upstream
-	APIServerList    []string
-	APICertAuth      string
-	APIClientCert    string
-	APIClientKey     string
-	ClientConfig     clientcmd.ClientConfig
 	APIConn          dnsController
 	Namespaces       map[string]struct{}
 	podMode          string

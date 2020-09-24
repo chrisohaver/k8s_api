@@ -62,10 +62,8 @@ type dnsControlOpts struct {
 	initEndpointsCache bool
 	ignoreEmptyService bool
 
-	// Label handling.
-	labelSelector          *meta.LabelSelector
+	// Label selectors
 	selector               labels.Selector
-	namespaceLabelSelector *meta.LabelSelector
 	namespaceSelector      labels.Selector
 
 	zones                 []string

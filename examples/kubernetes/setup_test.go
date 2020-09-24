@@ -7,7 +7,6 @@ import (
 	"github.com/coredns/coredns/plugin/pkg/fall"
 
 	"github.com/caddyserver/caddy"
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestKubernetesParse(t *testing.T) {
@@ -47,19 +46,6 @@ func TestKubernetesParse(t *testing.T) {
 		},
 		{
 			`kubernetes coredns.local {
-}`,
-			false,
-			"",
-			1,
-			0,
-			"",
-			"",
-			podModeDisabled,
-			fall.Zero,
-		},
-		{
-			`kubernetes coredns.local {
-	endpoint http://localhost:9090 http://localhost:9091
 }`,
 			false,
 			"",
@@ -151,7 +137,6 @@ func TestKubernetesParse(t *testing.T) {
 		},
 		{
 			`kubernetes coredns.local test.local {
-	endpoint http://localhost:8080
 	namespaces demo test
     labels environment in (production, staging, qa),application=nginx
     fallthrough
@@ -166,19 +151,6 @@ func TestKubernetesParse(t *testing.T) {
 			fall.Root,
 		},
 		// negative
-		{
-			`kubernetes coredns.local {
-    endpoint
-}`,
-			true,
-			"rong argument count or unexpected line ending",
-			-1,
-			-1,
-			"",
-			"",
-			podModeDisabled,
-			fall.Zero,
-		},
 		{
 			`kubernetes coredns.local {
 	namespaces
@@ -301,45 +273,6 @@ kubernetes cluster.local`,
 			podModeDisabled,
 			fall.Zero,
 		},
-		{
-			`kubernetes coredns.local {
-	kubeconfig
-}`,
-			true,
-			"Wrong argument count or unexpected line ending after",
-			-1,
-			0,
-			"",
-			"",
-			podModeDisabled,
-			fall.Zero,
-		},
-		{
-			`kubernetes coredns.local {
-	kubeconfig file context extraarg
-}`,
-			true,
-			"Wrong argument count or unexpected line ending after",
-			-1,
-			0,
-			"",
-			"",
-			podModeDisabled,
-			fall.Zero,
-		},
-		{
-			`kubernetes coredns.local {
-	kubeconfig file context
-}`,
-			false,
-			"",
-			1,
-			0,
-			"",
-			"",
-			podModeDisabled,
-			fall.Zero,
-		},
 	}
 
 	for i, test := range tests {
@@ -383,13 +316,6 @@ kubernetes cluster.local`,
 			t.Errorf("Test %d: Expected kubernetes controller to be initialized with %d namespaces. Instead found %d namespaces: '%v' for input '%s'", i, test.expectedNSCount, foundNSCount, k8sController.Namespaces, test.input)
 		}
 
-		//    Labels
-		if k8sController.opts.labelSelector != nil {
-			foundLabelSelectorString := meta.FormatLabelSelector(k8sController.opts.labelSelector)
-			if foundLabelSelectorString != test.expectedLabelSelector {
-				t.Errorf("Test %d: Expected kubernetes controller to be initialized with label selector '%s'. Instead found selector '%s' for input '%s'", i, test.expectedLabelSelector, foundLabelSelectorString, test.input)
-			}
-		}
 		//    Pods
 		foundPodMode := k8sController.podMode
 		if foundPodMode != test.expectedPodMode {

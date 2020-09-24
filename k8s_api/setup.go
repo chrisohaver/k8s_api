@@ -183,6 +183,15 @@ func parseStanza(c *caddy.Controller) (*KubeAPI, error) {
 				continue
 			}
 			return nil, c.ArgErr()
+		case "namespaces":
+			args := c.RemainingArgs()
+			if len(args) > 0 {
+				for _, a := range args {
+					kapi.namespaces[a] = struct{}{}
+				}
+				continue
+			}
+			return nil, c.ArgErr()
 		default:
 			return nil, c.Errf("unknown property '%s'", c.Val())
 		}

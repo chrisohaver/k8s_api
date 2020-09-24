@@ -33,6 +33,9 @@ all the zones the plugin should be authoritative for.
 
 ```
 kubernetes [ZONES...] {
+    namespaces NAMESPACE...
+    labels EXPRESSION
+    namespace_labels EXPRESSION
     pods POD-MODE
     endpoint_pod_names
     ttl TTL
@@ -43,6 +46,14 @@ kubernetes [ZONES...] {
 }
 ```
 
+* `namespaces` **NAMESPACE [NAMESPACE...]** only exposes the k8s namespaces listed.
+   If this option is omitted all namespaces are exposed
+* `labels` **EXPRESSION** only exposes the records for Kubernetes objects that match this label selector.
+  The label selector syntax is described in the
+  [Kubernetes User Guide - Labels](https://kubernetes.io/docs/user-guide/labels/). An example that
+  only exposes objects labeled as "application=nginx" in the "staging" or "qa" environments, would
+  use: `labels environment in (staging, qa),application=nginx`.
+* `namespace_labels` **EXPRESSION** as `labels` above, but applied to namespace labels.
 * `pods` **POD-MODE** sets the mode for handling IP-based pod A records, e.g.
    `1-2-3-4.ns.pod.cluster.local. in A 1.2.3.4`.
    This option is provided to facilitate use of SSL certs when connecting directly to pods. Valid
