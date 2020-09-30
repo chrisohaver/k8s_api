@@ -60,14 +60,14 @@ func (p PodNames) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg
 	sub := qname[0 : strings.Index(qname, zone)-1]
 	segs := strings.Split(sub, ".")
 	if len(segs) < 2 {
-		return dns.RcodeNameError, nil
+		return plugin.NextOrFailure(p.Name(), p.Next, ctx, w, r)
 	}
 	item, exists, err := p.podIndexer.GetByKey(segs[1] + "/" + segs[0])
 	if err != nil {
 		return dns.RcodeServerFailure, err
 	}
 	if !exists {
-		return dns.RcodeNameError, nil
+		return plugin.NextOrFailure(p.Name(), p.Next, ctx, w, r)
 	}
 	pod, ok := item.(*object.Pod)
 	if !ok {
