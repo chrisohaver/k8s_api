@@ -5,19 +5,15 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/coredns/coredns/plugin"
-
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/apimachinery/pkg/labels"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
 
 // KubeAPI implements a plugin that connects to a Kubernetes cluster.
 type KubeAPI struct {
-	Next plugin.Handler
-
 	APIServer     string
 	APICertAuth   string
 	APIClientCert string

@@ -32,11 +32,6 @@ func setup(c *caddy.Controller) error {
 
 	k.RegisterKubeCache(c)
 
-	dnsserver.GetConfig(c).AddPlugin(func(next plugin.Handler) plugin.Handler {
-		k.Next = next
-		return k
-	})
-
 	return nil
 }
 
